@@ -51,10 +51,28 @@ class ambbbFLBuilderModule extends FLBuilderModule
     return wp_kses( $string, ambbb__allowed_html__inline() );
   }
 
-  // return rel="noopener" if the target is blank
-  public function noopener( $target )
+  public function linkAttrs( $link, $settings = NULL )
   {
-    return '_blank' == $target ? 'rel="noopener"' : '';
+    $settings = $settings ?: $this->settings;
+    $attrs = [];
+
+    $target_setting = $link . "_target";
+    if ( $this->objectHas( $settings, $target_setting ) ) {
+      $attrs[] = sprintf( 'target="%s"', esc_attr( $settings->{$target_setting} ) );
+      if ( '_blank' == $settings->{$target_setting} ) {
+        $attrs[] = 'rel="noopener"';
+      }
+    }
+
+    $nofollow_setting = $link . "_nofollow";
+    if (
+      $this->objectHas( $settings, $nofollow_setting )
+      && 'yes' == $settings->{$nofollow_setting}
+    ) {
+      $attrs[] = 'rel="nofollow"';
+    }
+
+    return implode( ' ', $attrs );
   }
 
   private function mayAppend( $base = '', $separator = '', $append = NULL )
@@ -85,7 +103,7 @@ class ambbbFLBuilderModule extends FLBuilderModule
   {
     $classes = [];
     $classes[] = $this->bemClass( $element );
-    // ambbb__MODULE__ELEMENT_classes
+    // Filter: ambbb__MODULE__ELEMENT_classes
     $filter_tag = sprintf(
       'ambbb__%s__%s_classes',
       preg_replace( '/^ambbb[-_]*/', '', $this->slug ),

@@ -14,10 +14,12 @@ class ambbbCalloutModule extends ambbbFLBuilderModule
     ] );
 
     add_filter( 'ambbb__callout__button_classes', [__CLASS__, 'addButtonClasses'], 10, 3 );
+    add_filter( 'ambbb__callout__button-text_classes', [__CLASS__, 'addButtonTextClasses'], 10, 3 );
   }
 
   public static function addButtonClasses( $classes, $module, $button )
   {
+    $classes[] = 'ambbb-button';
     if ( !empty( $button->variations ) ) {
       foreach( $button->variations as $variation ) {
         if ( !empty( $variation ) ) {
@@ -25,6 +27,12 @@ class ambbbCalloutModule extends ambbbFLBuilderModule
         }
       }
     }
+    return $classes;
+  }
+
+  public static function addButtonTextClasses( $classes, $module, $button )
+  {
+    $classes[] = 'ambbb-button__text';
     return $classes;
   }
 }
@@ -93,16 +101,18 @@ FLBuilder::register_module( 'ambbbCalloutModule', [
               'none' => __( 'None', 'amb-beaver-basics' ),
             ],
             'toggle' => [
-              'block' => ['fields' => ['link_url']],
+              'block' => ['fields' => ['link']],
               'buttons' => ['fields' => ['buttons']],
               'none' => ['fields' => []],
             ],
           ],
 
-          'link_url' => [
+          'link' => [
             'type' => 'link',
-            'label' => __( 'Link URL', 'amb-beaver-basics' ),
+            'label' => __( 'Link', 'amb-beaver-basics' ),
+            'placeholder' => __( 'http://www.example.com', 'amb-beaver-basics' ),
             'show_target' => true,
+            'show_nofollow' => true,
             'preview' => [
               'type' => 'none'
             ],
