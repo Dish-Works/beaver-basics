@@ -32,7 +32,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "smoothscroll-polyfill": "^0.4.4",
     "stimulus": "^2.0.0",
-    "video.js": "^7.11.4"
+    "video.js": "^7.11.8"
   },
   "engines": {
     "yarn": "^1.0.0"
